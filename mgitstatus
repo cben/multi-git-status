@@ -7,7 +7,7 @@ DEBUG=0
 
 usage () {
     cat << EOF >&2
-    
+
 Usage: $0 [--version] [-w] [-e] [-f] [--throttle SEC] [-c] [-d/--depth=2] [--flatten] [--no-X] [DIR [DIR]...]
 
 mgitstatus shows uncommitted, untracked and unpushed changes in multiple Git
@@ -33,7 +33,7 @@ You can limit output with the following options:
   --no-untracked
   --no-stashes
   --no-ok          (same as -e)
-    
+
 EOF
 }
 
@@ -163,7 +163,7 @@ for DIR in "${@:-"."}"; do
     do
         GIT_DIR="$PROJ_DIR/.git"
         GIT_CONF="$PROJ_DIR/.git/config"
-        
+
         # Check git config for this project to see if we should ignore this repo.
         IGNORE=$(git config -f "$GIT_CONF" --bool mgitstatus.ignore)
         if [ "$IGNORE" = "true" ]; then
@@ -198,7 +198,7 @@ for DIR in "${@:-"."}"; do
         # they need a push or pull. We do this with various tests and put the name
         # of the branches in NEEDS_XXXX, seperated by newlines. After we're done,
         # we remove duplicates from NEEDS_XXX.
-        NEEDS_PUSH_BRANCHES="" 
+        NEEDS_PUSH_BRANCHES=""
         NEEDS_PULL_BRANCHES=""
         NEEDS_UPSTREAM_BRANCHES=""
 
@@ -245,8 +245,10 @@ for DIR in "${@:-"."}"; do
                     fi
                 fi
             else
-                # Branch does not have an upstream (local/remote branch).
+              # Branch does not have an upstream (local/remote branch).
+              if [ -n "$(git --work-tree "$(dirname "$GIT_DIR")" --git-dir "$GIT_DIR" branch --list decimal-test $MGITSTATUS_UPSTREAM_FILTER_FLAGS)" ]; then
                 NEEDS_UPSTREAM_BRANCHES="${NEEDS_UPSTREAM_BRANCHES}\n$REF_HEAD"
+              fi
             fi
         done
 
